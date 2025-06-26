@@ -42,7 +42,7 @@ static void		handle_movement(t_game *game, char dest, int y, int x, int new_y, i
 		game->map->grid[y][x] = '0';
 	if (dest == 'E')
 		game->map->grid[new_y][new_x] = 'F';
-	if (dest == 'C')
+	else if (dest == 'C')
 	{
 		game->collected++;
 		game->map->grid[new_y][new_x] = 'P';
