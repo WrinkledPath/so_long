@@ -1,59 +1,58 @@
 #include "so_long.h"
 
-static void	append_node(l_list **stack, char *str);
-static l_list *find_last_line(l_list *stack);
-static void	init_stack(l_list **stack);
+static int	process_map(m_list **stack, t_map **map);
+static int	check_file(char *file);
 
-int	main (void)
+int	main (int argc, char **argv)
 {
-	l_list *stack_a;
+	m_list *stack_a;
+	t_map *map;
+	t_game *game;
 
+	if (argc != 2 || !argv[1])
+		return (-1);
 	stack_a = NULL;
-	init_stack(&stack_a);
-	while (stack_a)
-	{
-		printf("%s", stack_a->line);
-		stack_a = stack_a->next;
-	}
+	map = NULL;
+	game = NULL;
+	if ((check_file(argv[1])) < 0)
+		return (-1);
+	if ((init_stack(&stack_a, argv[1])) != 0)
+		return (free_stack(&stack_a));
+	if ((process_map(&stack_a, &map)) < 0)
+		return (-1);
+	if ((init_window(&map, &game)) < 0)
+		return (-2);
+	printf("\n");
 }
 
-static void	init_stack(l_list **stack)
+static int	check_file(char *file)
 {
-	int fd;	
-	char *curr;
+	char *correct;
+	int	ext;
+	int i;
 
-	fd = open("./maps/map01.ber", O_RDONLY);
-	while ((curr = get_next_line(fd)))
+	correct = ".ber";
+	ext = ft_strlen(file) - 4;
+	i = 0;
+	while (file[ext + i])
 	{
-		append_node(stack, curr);
+		if (file[ext + i] != correct[i])
+			return (-1);
+		i++;
 	}
-	close(fd);		
+	return (0);
 }
-
-static void	append_node(l_list **stack, char *str)
+static int	process_map(m_list **stack, t_map **map)
 {
-	l_list *new_list;
-	l_list *last;
-
-	new_list = malloc(sizeof(l_list));
-	if (!new_list)
-		return ;
-	new_list->next = NULL;
-	new_list->line = str;
-	if (stack && *stack)
-	{
-		last = find_last_line(*stack);
-		new_list->prev = last;
-		last->next = new_list;
-	}
-	else
-	{
-		new_list->prev = NULL;
-		*stack = new_list;
-	}
+	if ((handle_map_errors(stack, map)) < 0)
+		return (-1);
+	if ((validate_map_path(stack, map)) < 0)
+		return (-1);
+	free_stack(stack);
+	return (0);
 }
 
-static l_list *find_last_line(l_list *stack)
+m_list	*find_last_line(m_list *stack)
 {
 	if (!stack)
 		return (NULL);

@@ -2,7 +2,8 @@
 NAME = so_long
 
 # Source files
-SRC = main.c process_map.c
+SRC = process_map.c map_errors.c stack_utils.c flood_fill_errors.c \
+	  main.c testing_code.c grid_utils.c mlx_utils.c game_utils.c player_moves.c
 OBJ = $(SRC:.c=.o)
 
 # Compiler and flags
