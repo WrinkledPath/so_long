@@ -115,25 +115,29 @@ static int	errors_miscelaneous(t_map *map)
 		return (-5);
 	if (map->exits != 1)
 		return (-6);
+	if (map->height > 16 || map->width > 30)
+		return (-8);
 	return (0);
 }
 
 void confirmed_map_error(m_list **stack, t_map **map, int error)
 {
 	if (error == -1)
-		printf("[ERROR]:Failed malloc");
+		write(1, "[ERROR]:Failed malloc\n", 22);
 	else if (error == -2)
-		printf("[ERROR]:Map not surrounded by walls\n");
+		write(1, "[ERROR]:Map not surrounded by walls\n", 35);
 	else if (error == -3)
-		printf("[ERROR]:Uneven Map Lines\n");
+		write(1, "[ERROR]:Uneven Map Lines\n", 25);
 	else if (error == -4)
-		printf("[ERROR]:Not 1 Player\n");
+		write(1, "[ERROR]:Not 1 Player\n", 21);
 	else if (error == -5)
-		printf("[ERROR]:Missing Collectibles\n");
+		write(1, "[ERROR]:Missing Collectibles\n", 29);
 	else if (error == -6)
-		printf("[ERROR]:Not 1 Exit\n");
+		write(1, "[ERROR]:Not 1 Exit\n,", 19);
 	else if (error == -7)
-		printf("[ERROR]:Non Admitted Char in map\n");
+		write(1, "[ERROR]:Non Admitted Char in map\n", 33);
+	else if (error == -8)
+		write(1, "[ERROR]:Map Too Big (Min: 4x3 / Max: 16x30)\n", 44);
 	free_stack(stack);
 	free(*map);
 	*map = NULL;

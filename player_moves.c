@@ -18,6 +18,8 @@ void		move_player(t_game *game, int yx[2], int dy, int dx)
 	new_y = yx[0] + dy;
 	new_x = yx[1] + dx;
 	dest = game->map->grid[new_y][new_x];
+	if (new_y >= game->map->height || new_x >= game->map->width)
+		return ;
 	if (dest == '1')
 		return ;
 	else if (dest == 'E' || dest == 'F')
